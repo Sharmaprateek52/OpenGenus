@@ -1,0 +1,19 @@
+{
+  "name": "word_to_pdf",
+  "version": "1.0.0",
+  "description": "Program to convert word document to pdf",
+  "main": "awesome-unoconv",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "NodeJS"
+  ],
+  "author": "Sharmaprateek52",
+  "license": "ISC",
+  "dependencies": {
+    "awesome-unoconv": "^1.0.1",
+    "docx-pdf": "0.0.1",
+    "libreoffice-convert": "^1.0.5"
+  }
+}
