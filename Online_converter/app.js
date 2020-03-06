@@ -3,6 +3,7 @@ var app = express();
 var upload = require('express-fileupload');
 var docxConverter = require('docx-pdf');
 var path = require('path');
+var fs = require('fs');
 
 const extend_pdf = '.pdf'
 const extend_docx = '.docx'
@@ -25,9 +26,8 @@ app.post('/upload',function(req,res){
     var uploadpath = __dirname + '/uploads/' + name;
     //Name of the file --ex test,example
     const First_name = name.split('.')[0];
+    //Name to download the file
     down_name = First_name;
-    console.log(down_name);
-    console.log(uploadpath);
     file.mv(uploadpath,function(err){
       if(err){
         console.log(err);
@@ -36,7 +36,9 @@ app.post('/upload',function(req,res){
         var initialPath = path.join(__dirname, `./uploads/${First_name}${extend_docx}`);
         //Path where the converted pdf will be placed/uploaded
         var upload_path = path.join(__dirname, `./uploads/${First_name}${extend_pdf}`);
-        console.log(initialPath);
+        //Converter to convert docx to pdf -->docx-pdf is used
+        //If you want you can use any other converter
+        //For example -- libreoffice-convert or --awesome-unoconv
         docxConverter(initialPath,upload_path,function(err,result){
         if(err){
           console.log(err);
@@ -53,20 +55,26 @@ app.post('/upload',function(req,res){
 });
 
 app.get('/download', (req,res) =>{
-  res.download(__dirname +`/uploads/${down_name}${extend_pdf}`,`${down_name}${extend_pdf}`)
+  res.download(__dirname +`/uploads/${down_name}${extend_pdf}`,`${down_name}${extend_pdf}`,(err) =>{
+    if(err){
+      res.send(err);
+    }else{
+      //Delete the files from directory after the use
+      console.log('Files deleted');
+      const delete_path_doc = process.cwd() + `/uploads/${down_name}${extend_docx}`;
+      const delete_path_pdf = process.cwd() + `/uploads/${down_name}${extend_pdf}`;
+      try {
+        fs.unlinkSync(delete_path_doc)
+        fs.unlinkSync(delete_path_pdf)
+        //file removed
+      } catch(err) {
+      console.error(err)
+      }
+    }
+  })
 })
 
+  
 app.listen(3000,() => {
     console.log("Server Started at port 3000...");
 })
-
-
-    //file.mv(uploadpath,function(err){
-      //if(err){
-        //console.log("File Upload Failed",name,err);
-        //res.send("Error Occured!")
-      //}else{
-        //res.send('Done!');
-        //console.log("File Uploaded",name);
-      //}
-    //});
