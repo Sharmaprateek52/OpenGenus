@@ -55,6 +55,7 @@ app.post('/upload',function(req,res){
 });
 
 app.get('/download', (req,res) =>{
+  //This will be used to download the converted file
   res.download(__dirname +`/uploads/${down_name}${extend_pdf}`,`${down_name}${extend_pdf}`,(err) =>{
     if(err){
       res.send(err);
@@ -72,6 +73,10 @@ app.get('/download', (req,res) =>{
       }
     }
   })
+})
+
+app.get('/thankyou',(req,res) => {
+    res.sendFile(__dirname+'/thankyou.html')
 })
 
   
